@@ -26,6 +26,8 @@ Project Management Platform
 - Mongoose
 - JWT
 - Socket.io
+- Redis
+- Brivo (Mailing)
 
 ### Dev Tools
 
