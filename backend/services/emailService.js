@@ -1,4 +1,4 @@
-import sendEmail from "./sendEmail";
+import sendEmail from "./sendEmail.js";
 const client = process.env.CLIENT_URL || "http://localhost:3000"
 const mode = process.env.NODE_ENV;
 

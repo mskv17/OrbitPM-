@@ -1,21 +1,22 @@
-import { bcryptSaltRound } from "../constands/const";
-import User from "../models/User";
-import AppError from "../utils/AppError";
+import { bcryptSaltRound } from "../constands/const.js";
+import User from "../models/User.js";
+import AppError from "../utils/AppError.js";
 import bcrypt from "bcrypt";
-import sendResponse from "../utils/sendResponse";
+import sendResponse from "../utils/sendResponse.js";
 import {
   genAccessToken,
   genRefrshToken,
   genResetToken,
-  verifyToken,
-} from "../utils/generateTokens";
-import getCookieCred from "../config/coockieCred";
-import { sendResetPassEmail } from "../services/emailService";
-import { redisClient } from "../config/reddis";
+  verifyRefreshToken,
+} from "../utils/generateTokens.js";
+import getCookieCred from "../config/coockieCred.js";
+import { sendResetPassEmail } from "../services/emailService.js";
+import { getRedisClient } from "../config/reddis.js";
+import sanitizeUser from "../utils/helper/sanitizeUser.js";
 const accessTokenMaxAge = 15 * 60 * 1000;
 
 function setAuthCookies(res, accessToken, refreshToken) {
-  res.cookie("accessToken", accessToken, getCookieCred(accessToken));
+  res.cookie("accessToken", accessToken, getCookieCred(accessTokenMaxAge));
   res.cookie("refreshToken", refreshToken, getCookieCred());
 }
 
@@ -42,7 +43,11 @@ export async function register(req, res) {
   const isAlreadyExist = await User.findOne({ email: normEmail });
 
   if (isAlreadyExist) {
-    throw new AppError("Email is already taken");
+    throw new AppError("Email is already taken", 400);
+  }
+
+  if (String(password).length < 8) {
+    throw new AppError("Password requires a minimum of 8 characters", 400);
   }
 
   const hasedPassword = await bcrypt.hash(password, bcryptSaltRound);
@@ -51,7 +56,7 @@ export async function register(req, res) {
     name,
     email: normEmail,
     avathar,
-    password,
+    password: hasedPassword,
   });
 
   const token = genAccessToken(user);
@@ -60,9 +65,9 @@ export async function register(req, res) {
   user.refreshToken = refreshToken;
   await user.save();
 
-  setAuthCookies(token, refreshToken);
+  setAuthCookies(res, token, refreshToken);
   sendResponse(res, 201, "user registration completed", {
-    user,
+    user: sanitizeUser(user),
   });
 }
 
@@ -80,14 +85,14 @@ export async function login(req, res) {
   }).select("+password");
 
   if (!user) {
-    throw new AppError("User not found", 404);
+    throw new AppError("Invalid email or Password", 404);
   }
 
   const hassedPassword = user.password;
   const isMatch = await bcrypt.compare(password, hassedPassword);
 
   if (!isMatch) {
-    throw new AppError("Invalid email or Password");
+    throw new AppError("Invalid email or Password", 400);
   }
 
   const token = genAccessToken(user);
@@ -97,11 +102,9 @@ export async function login(req, res) {
   user.lastLoging = Date.now();
   await user.save();
 
-  setAuthCookies(token, refreshToken);
+  setAuthCookies(res, token, refreshToken);
   sendResponse(res, 200, "user logged successfuly", {
-    name: user.name,
-    email,
-    normEmail,
+    user: sanitizeUser(user),
   });
 }
 
@@ -109,20 +112,23 @@ export async function refreshToken(req, res) {
   const token = req.cookies?.refreshToken;
   if (!token) throw new AppError("refreshToken is missing", 401);
   try {
-    const payload = verifyToken(token);
+    const payload = verifyRefreshToken(token);
     const user = await User.findById(payload.id).select("+refreshToken");
     if (!user || user.refreshToken !== token) {
-      cleareAuthCookies();
+      cleareAuthCookies(res);
       throw new AppError("Invalid refresh token", 401);
     }
-    const token = genAccessToken(user);
+    const accessToken = genAccessToken(user);
     const refreshToken = genRefrshToken(user);
     user.refreshToken = refreshToken;
     await user.save();
-    setAuthCookies(token, refreshToken);
-    sendResponse(res, 201, "new access token created");
+    setAuthCookies(res, accessToken, refreshToken);
+    sendResponse(res, 201, "new access token created", {
+      user: sanitizeUser(user),
+    });
   } catch (err) {
-    cleareAuthCookies();
+    console.error(err);
+    cleareAuthCookies(res);
     throw new AppError("Invalid refresh token", 401);
   }
 }
@@ -139,6 +145,7 @@ export async function ForgotPassword(req, res) {
   if (!email) throw new AppError("Eamil is required");
   const normEmail = email.trim().toLowerCase();
   validateEmil(normEmail);
+  const redisClient = getRedisClient();
   const isAlreadySend = await redisClient.get("email:" + normEmail);
   if (isAlreadySend)
     throw new AppError(
@@ -152,11 +159,11 @@ export async function ForgotPassword(req, res) {
       200,
       "If the account exists, you will receive instructions."
     );
-  const { resetToken, hash } = await genResetToken();
+  const { resetToken, hash } = genResetToken();
   user.resetToken = hash;
   user.resetTokenExpires = Date.now() + 15 * 60 * 1000;
   await user.save();
-  await redisClient.set("email:" + normEmail, true, { EX: 120 });
+  await redisClient.set("email:" + normEmail, "1", { EX: 120 });
 
   await sendResetPassEmail(normEmail, resetToken);
 
@@ -181,9 +188,13 @@ export async function resetpassword(req, res) {
   const accessToken = genAccessToken(user);
   user.password = hashedPassword;
   user.refreshToken = refreshToken;
-  user.resetToken = "",
-  await user.save();
+  ((user.resetToken = ""), await user.save());
 
-  setAuthCookies(res,accessToken,refreshToken);
-  sendResponse(res, 200, "Password updated successfuly");
+  setAuthCookies(res, accessToken, refreshToken);
+  sendResponse(res, 200, "Password updated successfuly",{user:sanitizeUser(user)});
+}
+
+export function authMe(req, res) {
+  const user = req.user;
+  sendResponse(res, 200, "user data fetced", { user });
 }

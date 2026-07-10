@@ -5,9 +5,9 @@ import { connectRedis } from "./config/reddis.js";
 configDotenv();
 const PORT = process.env.PORT;
 
-function startServer() {
+async function startServer() {
     connectDB();
-    connectRedis();
+    await connectRedis();
     app.listen(PORT,()=>console.log(`server running on PORT: ${PORT}`))
 }
 

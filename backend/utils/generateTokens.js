@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import bcrypt from "bcrypt";
-import { bcryptSaltRound } from "../constands/const";
 
 export function genAccessToken(user) {
   return jwt.sign(
@@ -23,15 +21,19 @@ export function verifyToken(token) {
   return jwt.verify(token, process.env.JWT_SECRET);
 }
 
-export async function genResetToken(resetToken=crypto.randomBytes(32).toString("hex")) {
-  const hash = await bcrypt.hash(resetToken, bcryptSaltRound);
+export function verifyRefreshToken(token) {
+  return jwt.verify(
+    token,
+    process.env.JWT_REFRESH_SECRET || "jwt_refresh_secret"
+  );
+}
+
+export function genResetToken(
+  resetToken = crypto.randomBytes(32).toString("hex")
+) {
+  const hash = crypto.createHash("sha256").update(resetToken).digest("hex");
   return {
     resetToken,
     hash,
   };
-}
-
-export async function verifyResetToken (resetToken,hash) {
-  const isMatch = await bcrypt.compare(resetToken,hash);
-  return isMatch;
 }
