@@ -1,0 +1,25 @@
+:root {
+    --boxShadow:0 2px 10px rgba(15,23,42,.08);
+    --cardRadius:16px;
+    --primary:#2563EB;
+    --secondary:#1E293B;
+    --background:#F8FAFC;
+    --surface:#FFFFFF;
+    --success:#22C55E;
+    --warning:#F59E0B;
+    --danger:#EF4444;
+    --text:#0F172A;
+    --border:#E2E8F0;
+    --font:'Inter';
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font);
+}
+
+body {
+    overflow: hidden;
+}

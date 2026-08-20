@@ -1,0 +1,156 @@
+/* Provides the shared light SaaS frame around every application page. */
+.app-shell {
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--text);
+  background: var(--background);
+}
+
+/* Keeps navigation visible, compact, and consistent across the application. */
+.app-header {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  gap: 32px;
+  padding: 0 clamp(20px, 5vw, 72px);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.app-logo,
+.app-nav-link,
+.app-header-action,
+.app-user-card {
+  text-decoration: none;
+}
+
+.app-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--secondary);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.app-logo-mark {
+  color: var(--primary);
+  font-size: 1.05rem;
+}
+
+.app-navigation {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-right: auto;
+}
+
+.app-nav-link {
+  padding: 23px 0 21px;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+}
+
+.app-nav-link:hover,
+.app-nav-link.is-active {
+  color: var(--primary);
+}
+
+.app-nav-link.is-active {
+  border-bottom-color: var(--primary);
+}
+
+.app-header-action {
+  padding: 10px 16px;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: var(--primary);
+  border-radius: 10px;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.app-header-action:hover {
+  color: #ffffff;
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* Shows the signed-in user without taking over the compact application header. */
+.app-user-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 180px;
+  padding: 5px 10px 5px 5px;
+  color: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.app-user-card:hover {
+  color: var(--secondary);
+  background: #f8fafc;
+  border-color: #bfdbfe;
+}
+
+.app-user-avatar,
+.app-user-initials {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  place-items: center;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: var(--primary);
+  border-radius: 9px;
+  object-fit: cover;
+}
+
+.app-user-name {
+  overflow: hidden;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-content {
+  width: 100%;
+  min-height: calc(100vh - 68px);
+  overflow-x: auto !important;
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    gap: 16px;
+    padding: 0 16px;
+  }
+
+  .app-navigation {
+    gap: 14px;
+  }
+
+  .app-nav-link {
+    font-size: 0.8rem;
+  }
+
+  .app-header-action {
+    padding: 9px 11px;
+    font-size: 0.78rem;
+  }
+
+  .app-user-card {
+    max-width: 130px;
+    padding-right: 7px;
+  }
+
+  .app-user-name {
+    font-size: 0.78rem;
+  }
+}

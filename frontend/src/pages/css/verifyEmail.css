@@ -1,0 +1,87 @@
+/* Creates a clean public verification page using the OrbitPM light theme. */
+.verify-email-page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #eef5ff;
+}
+
+/* Keeps the verification state focused in a compact, readable surface. */
+.verify-email-card {
+  width: min(100%, 500px);
+  padding: clamp(32px, 7vw, 60px);
+  color: var(--text);
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--boxShadow);
+}
+
+.verify-email-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 22px;
+  place-items: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: var(--primary);
+  border-radius: 16px;
+}
+
+.verify-email-icon.is-success {
+  background: var(--success);
+}
+
+.verify-email-eyebrow {
+  margin-bottom: 10px;
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.verify-email-card h1 {
+  margin-bottom: 18px;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+}
+
+.verify-email-message {
+  margin: 0 auto 24px;
+  max-width: 390px;
+  line-height: 1.6;
+}
+
+.verify-email-message.success {
+  color: #15803d;
+}
+
+.verify-email-message.error {
+  color: #b42318;
+}
+
+/* Makes the successful next step obvious without adding extra page navigation. */
+.verify-email-action {
+  display: inline-flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  color: #ffffff;
+  font-weight: 700;
+  background: var(--primary);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.verify-email-action:hover {
+  color: #ffffff;
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}

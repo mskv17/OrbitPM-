@@ -1,0 +1,267 @@
+/* Creates the calm, layered backdrop behind the authentication card. */
+.container.vh-100 {
+    position: relative;
+    isolation: isolate;
+    max-width: none;
+    padding: 32px;
+    background: #eef5ff;
+    overflow: hidden;
+}
+
+.container.vh-100::before,
+.container.vh-100::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.container.vh-100::before {
+    width: 420px;
+    height: 420px;
+    top: -180px;
+    right: -100px;
+    background: #d8f3e8;
+}
+
+.container.vh-100::after {
+    width: 300px;
+    height: 300px;
+    bottom: -150px;
+    left: -80px;
+    background: #dbeafe;
+}
+
+/* Gives the page its main responsive two-column frame. */
+.auth-card {
+    display: flex;
+    width: min(980px, 100%);
+    min-height: 590px;
+    overflow: hidden;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    box-shadow: 0 24px 70px rgba(37, 99, 235, 0.14);
+    backdrop-filter: blur(16px);
+}
+
+/* Styles the brand message as a strong visual anchor. */
+.brand-section {
+    position: relative;
+    display: flex;
+    flex: 1 1 48%;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: clamp(36px, 6vw, 72px);
+    text-align: left;
+    color: #ffffff;
+    background: linear-gradient(145deg, #1d4ed8 0%, #2563eb 58%, #0891b2 100%);
+}
+
+.brand-section::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    right: -70px;
+    bottom: -70px;
+    border: 28px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+}
+
+.brand-section header,
+.brand-section main {
+    position: relative;
+    z-index: 1;
+}
+
+.brand-section h1 {
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.brand-section p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.92rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.brand-section main {
+    max-width: 380px;
+    padding: 0;
+}
+
+.brand-section h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(1.8rem, 3vw, 2.7rem);
+    line-height: 1.12;
+}
+
+/* Keeps the form area bright, spacious, and easy to scan. */
+.auth-section {
+    display: flex;
+    flex: 1 1 52%;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(28px, 5vw, 68px);
+    background: #ffffff;
+}
+
+.auth-section > div {
+    width: min(100%, 360px);
+}
+
+.auth-section h1 {
+    margin-bottom: 28px;
+    color: var(--text);
+    font-size: clamp(1.55rem, 3vw, 2rem);
+    font-weight: 700;
+}
+
+/* Displays validation feedback between the title and the fields. */
+.auth-section .form-message {
+    margin: 12px 0 22px;
+    padding: 11px 13px;
+    color: #b42318;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    text-align: left;
+    background: #fff1f0;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+}
+
+.auth-section .form-message.info {
+    color: #1d4ed8;
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+/* Turns the existing bare form elements into consistent, touch-friendly controls. */
+.auth-section form {
+    padding: 0 !important;
+    gap: 0 !important;
+}
+
+/* Aligns each label closely with its input and keeps the form rhythm consistent. */
+.auth-section label {
+    display: block;
+    align-self: flex-start;
+    margin: 14px 0 7px;
+    color: #475569;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.auth-section label:first-child {
+    margin-top: 0;
+}
+
+.auth-section input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 16px;
+    color: var(--text);
+    background: #f8fafc;
+    border: 1px solid #d9e2f0;
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.auth-section input + label {
+    margin-top: 14px;
+}
+
+.auth-section input::placeholder {
+    color: #94a3b8;
+}
+
+.auth-section input:focus {
+    background: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.auth-section label:has(+ input:focus) {
+    color: var(--primary);
+}
+
+.auth-section button {
+    min-height: 52px;
+    margin-top: 8px;
+    color: #ffffff;
+    font-weight: 700;
+    background: var(--primary);
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.auth-section button:hover {
+    background: #1d4ed8;
+    box-shadow: 0 14px 24px rgba(37, 99, 235, 0.26);
+    transform: translateY(-2px);
+}
+
+.auth-section button:active {
+    transform: translateY(0);
+}
+
+/* Makes the account switch link clear without competing with the submit action. */
+.auth-section span {
+    display: block;
+    margin-top: 24px;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.auth-section a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-section a:hover {
+    text-decoration: underline;
+}
+
+/* Stacks the two sections on narrow screens and preserves comfortable spacing. */
+@media (max-width: 700px) {
+    .container.vh-100 {
+        min-height: 100vh;
+        height: auto !important;
+        padding: 18px;
+    }
+
+    .auth-card {
+        flex-direction: column;
+        min-height: auto;
+        border-radius: 20px;
+    }
+
+    .brand-section {
+        min-height: 250px;
+        padding: 32px;
+    }
+
+    .brand-section h2 {
+        font-size: 1.75rem;
+    }
+
+    .auth-section {
+        padding: 38px 28px 42px;
+    }
+}

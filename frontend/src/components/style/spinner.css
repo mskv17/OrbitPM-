@@ -1,0 +1,79 @@
+/* Centers the spinner and keeps it suitable for inline loading states. */
+.spinner-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 48px;
+    color: var(--secondary);
+}
+
+/* Provides an optional page-level loading surface without changing layout logic. */
+.spinner-container--fullscreen {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background: var(--background);
+}
+
+/* Creates the OrbitPM-inspired rotating blue and teal loading mark. */
+.orbit-spinner {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-right-color: #0891b2;
+    border-radius: 50%;
+    animation: orbit-spin 850ms linear infinite;
+}
+
+.orbit-spinner::before,
+.orbit-spinner::after,
+.orbit-spinner span {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.orbit-spinner::before {
+    top: 2px;
+    left: 3px;
+    background: var(--primary);
+}
+
+.orbit-spinner::after {
+    right: 2px;
+    bottom: 4px;
+    background: #0891b2;
+}
+
+.orbit-spinner span {
+    top: 50%;
+    left: 50%;
+    background: var(--success);
+    transform: translate(-50%, -50%);
+}
+
+/* Keeps the loading message quiet so the animated mark remains the focus. */
+.spinner-label {
+    color: var(--secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+@keyframes orbit-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Prevents motion-sensitive users from seeing a continuously rotating element. */
+@media (prefers-reduced-motion: reduce) {
+    .orbit-spinner {
+        animation-duration: 1.8s;
+    }
+}
