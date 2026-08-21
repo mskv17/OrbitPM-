@@ -10,7 +10,10 @@ import {
   verifyRefreshToken,
 } from "../utils/generateTokens.js";
 import getCookieCred from "../config/coockieCred.js";
-import { sendResetPassEmail } from "../services/emailService.js";
+import {
+  sendEmailVerification,
+  sendResetPassEmail,
+} from "../services/emailService.js";
 import { getRedisClient } from "../config/reddis.js";
 import sanitizeUser from "../utils/helper/sanitizeUser.js";
 const accessTokenMaxAge = 15 * 60 * 1000;
@@ -21,8 +24,8 @@ function setAuthCookies(res, accessToken, refreshToken) {
 }
 
 function cleareAuthCookies(res) {
-  res.clearCookie("refreshToken");
-  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken", getCookieCred());
+  res.clearCookie("accessToken", getCookieCred(accessTokenMaxAge));
 }
 
 function validateEmil(normEmail) {
@@ -30,6 +33,16 @@ function validateEmil(normEmail) {
   if (!emailRegex.test(normEmail)) {
     throw new AppError("Please provide a valid email address", 400);
   }
+}
+
+async function sendVerificationEmail(user) {
+  const verification = genResetToken();
+
+  user.verificationToken = verification.hash;
+  user.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000;
+  await user.save();
+
+  await sendEmailVerification(user.email, verification.resetToken);
 }
 
 export async function register(req, res) {
@@ -63,7 +76,7 @@ export async function register(req, res) {
   const refreshToken = genRefrshToken(user);
 
   user.refreshToken = refreshToken;
-  await user.save();
+  await sendVerificationEmail(user);
 
   setAuthCookies(res, token, refreshToken);
   sendResponse(res, 201, "user registration completed", {
@@ -104,6 +117,44 @@ export async function login(req, res) {
 
   setAuthCookies(res, token, refreshToken);
   sendResponse(res, 200, "user logged successfuly", {
+    user: sanitizeUser(user),
+  });
+
+  //background task send email verification if not verified
+
+  if (!user.isVerified) {
+    await sendVerificationEmail(user);
+  }
+}
+
+export async function verifyEmail(req, res) {
+  const { token } = req.body;
+  if (!token) throw new AppError("Verification token is required", 400);
+
+  const { hash } = genResetToken(token);
+  const user = await User.findOne({
+    verificationToken: hash,
+    isDeleted: false,
+  }).select("+verificationToken");
+
+  if (!user) throw new AppError("Invalid verification token", 400);
+  if (
+    !user.verificationTokenExpires ||
+    user.verificationTokenExpires < Date.now()
+  ) {
+    throw new AppError("Verification token has expired", 400);
+  }
+
+  user.isVerified = true;
+  user.verificationToken = "";
+  user.verificationTokenExpires = null;
+  await user.save();
+
+  const redisClient = getRedisClient();
+  const cacheKey = `user:${user._id}`;
+  await redisClient.del(cacheKey);
+
+  sendResponse(res, 200, "Email verified successfully", {
     user: sanitizeUser(user),
   });
 }
@@ -191,7 +242,27 @@ export async function resetpassword(req, res) {
   ((user.resetToken = ""), await user.save());
 
   setAuthCookies(res, accessToken, refreshToken);
-  sendResponse(res, 200, "Password updated successfuly",{user:sanitizeUser(user)});
+  sendResponse(res, 200, "Password updated successfuly", {
+    user: sanitizeUser(user),
+  });
+}
+
+export async function verifyResetToken(req, res) {
+  const { token } = req.body;
+  if (!token) throw new AppError("Reset token is required", 400);
+
+  const { hash } = genResetToken(token);
+  const user = await User.findOne({
+    resetToken: hash,
+    isDeleted: false,
+  }).select("+resetToken");
+
+  if (!user) throw new AppError("Invalid reset token", 400);
+  if (!user.resetTokenExpires || user.resetTokenExpires < Date.now()) {
+    throw new AppError("Reset token has expired", 400);
+  }
+
+  sendResponse(res, 200, "Reset token is valid", { valid: true });
 }
 
 export function authMe(req, res) {

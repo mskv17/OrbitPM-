@@ -168,6 +168,34 @@
     margin-top: 0;
 }
 
+/* Flex row aligning field label on the left and secondary action link (e.g. Forgot Password) on the right. */
+.auth-section .form-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 14px;
+    margin-bottom: 7px;
+}
+
+.auth-section .form-label-row label {
+    margin: 0 !important;
+}
+
+.auth-section .forgot-password-link {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--primary, #2563eb);
+    text-decoration: none;
+    transition: color 180ms ease;
+}
+
+.auth-section .forgot-password-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+
 .auth-section input {
     width: 100%;
     min-height: 52px;

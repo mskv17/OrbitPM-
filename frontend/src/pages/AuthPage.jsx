@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Form } from "../components/ui/Form";
+import { FormMessage } from "../components/ui/FormMessage";
+import { AuthCard } from "../components/ui/AuthCard";
 import "./css/authPage.css";
 import { validateLoginForm, validateSignUpForm } from "../utils/validators/fromValidator";
 import { useMutation } from "@tanstack/react-query";
 import { post } from "../services/api/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 
 export const AuthPage = () => {
@@ -16,7 +18,7 @@ export const AuthPage = () => {
   };
 
   const authMutation = useMutation({
-    mutationFn: async ({data,auth}) => {
+    mutationFn: async ({ data, auth }) => {
       const res = await post(`/auth/${auth}`, data);
       return res;
     },
@@ -55,74 +57,58 @@ export const AuthPage = () => {
   };
 
   return (
-    <div className="container w-100 vh-100 d-flex justify-content-center align-items-center">
-      <div className="auth-card">
-        <div className="brand-section">
-          <header>
-            <h1>OrbitPM</h1>
-            <p>Plan. Track. Deliver.</p>
-          </header>
-          <main>
-            <h2>Modern project management for agile teams.</h2>
-          </main>
-        </div>
-        <div className="auth-section">
-          {!isSignUp ? (
-            <Form
-              title="Login into your account"
-              footerText="Don't have an account ?"
-              footerAction="Sign Up"
-              footerOnAction={handleSwitch}
-              onSubmit={handleLogin}
-            >
-              <label htmlFor="email">Email</label>
-              <input type="email" name="email" required />
-              <label htmlFor="password">Password</label>
-              <input type="password" name="password" required />
-              {message?.text && (
-                <p
-                  className={`form-message ${message.type || "info"}`}
-                  role="alert"
-                >
-                  {message.text}
-                </p>
-              )}
-              <button disabled={!isSignUp && authMutation.isLoading}>
-                {!isSignUp && authMutation.isLoading ? <Spinner label="Logging in..." /> : "Login"}
-              </button>
-            </Form>
-          ) : (
-            <Form
-              title="Create your account"
-              footerText="Already have an account ?"
-              footerAction="Login"
-              footerOnAction={handleSwitch}
-              onSubmit={handleSignUp}
-              message={message}
-            >
-              <label htmlFor="name">Name</label>
-              <input type="text" required name="name" />
-              <label htmlFor="email">Email</label>
-              <input type="email" name="email" required />
-              <label htmlFor="password">Password</label>
-              <input type="password" name="password" required />
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input type="password" name="confirmPassword" required />
-              {message?.text && (
-                <p
-                  className={`form-message ${message.type || "info"}`}
-                  role="alert"
-                >
-                  {message.text}
-                </p>
-              )}
-              <button disabled={isSignUp && authMutation.isLoading}>
-                {isSignUp && authMutation.isLoading ? <Spinner label="Creating account..." /> : "Sign Up"}
-              </button>
-            </Form>
-          )}
-        </div>
-      </div>
-    </div>
+    <AuthCard headline="Modern project management for agile teams.">
+      {!isSignUp ? (
+        <Form
+          title="Login into your account"
+          footerText="Don't have an account ?"
+          footerAction="Sign Up"
+          footerOnAction={handleSwitch}
+          onSubmit={handleLogin}
+        >
+          <label htmlFor="email">Email</label>
+          <input type="email" id="email" name="email" required />
+
+          <div className="form-label-row">
+            <label htmlFor="password">Password</label>
+            <Link to="/forgot-password" className="forgot-password-link">
+              Forgot password?
+            </Link>
+          </div>
+          <input type="password" id="password" name="password" required />
+
+          <FormMessage message={message} />
+
+          <button disabled={!isSignUp && authMutation.isLoading}>
+            {!isSignUp && authMutation.isLoading ? <Spinner label="Logging in..." /> : "Login"}
+          </button>
+        </Form>
+      ) : (
+        <Form
+          title="Create your account"
+          footerText="Already have an account ?"
+          footerAction="Login"
+          footerOnAction={handleSwitch}
+          onSubmit={handleSignUp}
+        >
+          <label htmlFor="name">Name</label>
+          <input type="text" required name="name" />
+          <label htmlFor="email">Email</label>
+          <input type="email" name="email" required />
+          <label htmlFor="password">Password</label>
+          <input type="password" name="password" required />
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input type="password" name="confirmPassword" required />
+
+          <FormMessage message={message} />
+
+          <button disabled={isSignUp && authMutation.isLoading}>
+            {isSignUp && authMutation.isLoading ? <Spinner label="Creating account..." /> : "Sign Up"}
+          </button>
+        </Form>
+      )}
+    </AuthCard>
   );
 };
+
+

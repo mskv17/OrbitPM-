@@ -18,7 +18,7 @@ export function genRefrshToken(user) {
 }
 
 export function verifyToken(token) {
-  return jwt.verify(token, process.env.JWT_SECRET);
+  return jwt.verify(token, process.env.JWT_SECRET || "jwt_secret");
 }
 
 export function verifyRefreshToken(token) {

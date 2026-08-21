@@ -19,7 +19,3 @@
     box-sizing: border-box;
     font-family: var(--font);
 }
-
-body {
-    overflow: hidden;
-}
