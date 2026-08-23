@@ -3,6 +3,7 @@ import app from "./app.js";
 import connectDB from "./config/connectDb.js";
 import { connectRedis } from "./config/reddis.js";
 import {protector} from "protector-shield";
+import { initSupabase } from "./config/supabase.js";
 
 
 configDotenv();
@@ -11,6 +12,7 @@ const PORT = process.env.PORT;
 async function startServer() {
     connectDB();
     await connectRedis();
+    initSupabase();
     console.log("Frontend URL:", process.env.FRONTEND_URL);
     app.listen(PORT,()=>{
         console.log(`server running on PORT: ${PORT} `)

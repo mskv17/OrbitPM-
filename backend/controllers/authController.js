@@ -265,6 +265,79 @@ export async function verifyResetToken(req, res) {
   sendResponse(res, 200, "Reset token is valid", { valid: true });
 }
 
+export async function changePassword(req, res) {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    throw new AppError("All fields are required", 400);
+  }
+
+  if (String(newPassword).length < 8) {
+    throw new AppError("Password requires a minimum of 8 characters", 400);
+  }
+
+  const user = await User.findOne({
+    _id: req.user._id,
+    isDeleted: false,
+  }).select("+password");
+
+  if (!user) throw new AppError("User not found", 404);
+
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+  if (!isMatch) throw new AppError("Current password is incorrect", 400);
+
+  user.password = await bcrypt.hash(newPassword, bcryptSaltRound);
+  await user.save();
+
+  const redisClient = getRedisClient();
+  const cacheKey = `user:${user._id}`;
+  await redisClient.del(cacheKey);
+
+  sendResponse(res, 200, "Password changed successfuly");
+}
+
+export async function updateProfile(req, res) {
+  const { updates } = req.body;
+  if (!updates || typeof updates !== "object" || Array.isArray(updates)) {
+    throw new AppError("updates is required", 400);
+  }
+
+  const allowedUpdates = ["name", "avathar"];
+  const requestedUpdates = Object.keys(updates);
+
+  if (requestedUpdates.length === 0) {
+    throw new AppError("No updates provided", 400);
+  }
+
+  const userUpdates = {};
+  if (Object.hasOwn(updates, "name")) {
+    const name = String(updates.name).trim();
+    if (name.length < 2 || name.length > 50) {
+      throw new AppError("Name must be between 2 and 50 characters", 400);
+    }
+    userUpdates.name = name;
+  }
+
+  if (Object.hasOwn(updates, "avathar")) {
+    userUpdates.avathar = String(updates.avathar || "").trim();
+  }
+
+  const user = await User.findOneAndUpdate(
+    { _id: req.user._id, isDeleted: false },
+    { $set: userUpdates },
+    { new: true, runValidators: true }
+  );
+
+  if (!user) throw new AppError("User not found", 404);
+
+  const redisClient = getRedisClient();
+  const cacheKey = `user:${user._id}`;
+  await redisClient.del(cacheKey);
+
+  sendResponse(res, 200, "Profile updated successfuly", {
+    user: sanitizeUser(user),
+  });
+}
+
 export function authMe(req, res) {
   const user = req.user;
   sendResponse(res, 200, "user data fetced", { user });

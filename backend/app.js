@@ -6,6 +6,8 @@ import compression from "compression"
 import authRoutes from "./routes/authRoutes.js";
 import cors from "cors";
 import { configDotenv } from "dotenv";
+import { authMidleWare } from "./middleware/authmiddleware.js";
+import storageRoutes from "./routes/storageRoutes.js";
 
 configDotenv();
 const app = express();
@@ -29,6 +31,7 @@ app.get("/api/status",(req,res) => {
 });
 
 app.use("/api/auth",authRoutes);
+app.use("/api/storage",authMidleWare,storageRoutes);
 
 app.get("{*splat}",(req,res) => {
     res.status(404).send("404 Page not found");
