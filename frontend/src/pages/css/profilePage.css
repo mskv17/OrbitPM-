@@ -1,0 +1,212 @@
+/* Profile Page Styling matching OrbitPM SaaS Theme */
+
+.profile-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: clamp(32px, 5vw, 60px) clamp(20px, 4vw, 36px);
+}
+
+.profile-card {
+  position: relative;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+/* Header Banner & Avatar Section */
+.profile-banner {
+  height: 120px;
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #0891b2 100%);
+  position: relative;
+}
+
+.profile-header-content {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 32px;
+  margin-top: -50px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.profile-avatar-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 24px;
+  background: #ffffff;
+  padding: 6px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+}
+
+.profile-avatar-img,
+.profile-avatar-initials {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.profile-avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: var(--primary, #2563eb);
+}
+
+.profile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 12px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.profile-btn--primary {
+  color: #ffffff;
+  background: var(--primary, #2563eb);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+}
+
+.profile-btn--primary:hover {
+  color: #ffffff;
+  background: #1d4ed8;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+.profile-btn--secondary {
+  color: #475569;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.profile-btn--secondary:hover {
+  color: #1e293b;
+  background: #e2e8f0;
+}
+
+.profile-edit-icon-btn {
+  padding: 10px;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+/* User Identity Info */
+.profile-user-info {
+  padding: 0 32px 32px;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.profile-user-name {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--secondary, #1e293b);
+  margin-bottom: 4px;
+}
+
+.profile-user-email {
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-badge.verified {
+  color: #15803d;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+}
+
+.status-badge.unverified {
+  color: #b42318;
+  background: #fff1f0;
+  border: 1px solid #fecaca;
+}
+
+/* Profile Details Grid */
+.profile-details-grid {
+  padding: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.profile-detail-card {
+  padding: 20px 22px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--secondary, #1e293b);
+}
+
+@media (max-width: 600px) {
+  .profile-header-content {
+    padding: 0 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-user-info {
+    padding: 0 20px 24px;
+  }
+
+  .profile-details-grid {
+    padding: 20px;
+    grid-template-columns: 1fr;
+  }
+}

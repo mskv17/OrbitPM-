@@ -1,0 +1,57 @@
+/* Modal Component Styles */
+
+.profile-modal-card {
+  position: relative;
+  width: min(100%, 480px);
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.2);
+  overflow: hidden;
+  animation: popupScaleUp 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  padding: 20px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 0 14px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  flex: 1;
+}
+
+.modal-close-btn,
+.modal-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.modal-close-btn:hover,
+.modal-back-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.modal-body {
+  padding: 0;
+}

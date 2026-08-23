@@ -77,6 +77,8 @@ npm install
 ## Current Progress
 
 - Project Setup
+- Complete Auth
+- Landing Page
 
 ## License
 

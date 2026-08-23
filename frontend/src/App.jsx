@@ -10,6 +10,7 @@ import { EmailVerificationFallBack } from './pages/EmailVerificationFallBack'
 import { VerifyEmail } from './pages/VerifyEmail'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/ResetPasswordPage'
+import { ProfilePage } from './pages/ProfilePage'
 
 function ProtectedRoute({ children }) {
   const { data, isLoading, isError, error } = AuthMe();
@@ -41,6 +42,7 @@ function App() {
     <AppLayout>
       <Routes>
         <Route path='/dashboard' element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+        <Route path='/profile' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path='/' element={<Home />} />
         <Route path='/auth' element={<AuthPage />} />
         <Route path='/forgot-password' element={<ForgotPasswordPage />} />

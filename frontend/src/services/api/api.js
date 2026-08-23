@@ -64,12 +64,17 @@ api.interceptors.response.use(
 
 // Converts Axios and network failures into one predictable error shape.
 export function handleApiError(error) {
-	const apiError = new Error(
-		error.response?.data?.message || error.message || "Something went wrong",
-	);
+	if (error?.isApiError) return error;
 
-	apiError.status = error.response?.status || 0;
-	apiError.data = error.response?.data || null;
+	const message =
+		error.response?.data?.message ||
+		error.data?.message ||
+		error.message ||
+		"Something went wrong";
+
+	const apiError = new Error(message);
+	apiError.status = error.response?.status || error.status || 0;
+	apiError.data = error.response?.data || error.data || null;
 	apiError.isApiError = true;
 
 	return apiError;
