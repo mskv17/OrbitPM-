@@ -79,6 +79,7 @@ npm install
 - Project Setup
 - Complete Auth
 - Landing Page
+- complete profile page and managment
 
 ## License
 
