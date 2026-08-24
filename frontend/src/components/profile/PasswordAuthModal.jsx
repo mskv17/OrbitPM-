@@ -81,9 +81,9 @@ export const PasswordAuthModal = ({ isOpen, onClose }) => {
       onBack={
         modalView === "changePassword"
           ? () => {
-              setModalView("methods");
-              setFeedback({ type: "", text: "" });
-            }
+            setModalView("methods");
+            setFeedback({ type: "", text: "" });
+          }
           : undefined
       }
     >

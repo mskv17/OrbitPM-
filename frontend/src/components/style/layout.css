@@ -262,6 +262,8 @@
 .app-content {
   width: 100%;
   min-height: calc(100vh - 68px);
+  display: flex;
+  flex-direction: column;
 }
 
 /* Mobile Responsive Header Styles */

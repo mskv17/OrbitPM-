@@ -1,18 +1,31 @@
-/* Centers the spinner and keeps it suitable for inline loading states. */
+/* Centers the spinner and keeps it suitable for page and section loading states. */
 .spinner-container {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    min-height: 48px;
+    gap: 14px;
+    width: 100%;
+    flex: 1;
+    min-height: 280px;
+    padding: 32px 16px;
+    margin: 0 auto;
     color: var(--secondary);
+    text-align: center;
+    box-sizing: border-box;
 }
 
-/* Provides an optional page-level loading surface without changing layout logic. */
+/* Provides an optional page-level fixed loading surface across the entire viewport. */
 .spinner-container--fullscreen {
-    display: flex;
-    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
     min-height: 100vh;
+    z-index: 9999;
     background: var(--background);
 }
 
@@ -75,5 +88,39 @@
 @media (prefers-reduced-motion: reduce) {
     .orbit-spinner {
         animation-duration: 1.8s;
+    }
+}
+
+/* Compact button/inline spinner for form actions */
+.button-spinner-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: inherit;
+    line-height: 1;
+}
+
+.button-spinner-ring {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: button-spinner-spin 650ms linear infinite;
+    opacity: 0.9;
+    flex-shrink: 0;
+}
+
+.button-spinner-label {
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+}
+
+@keyframes button-spinner-spin {
+    to {
+        transform: rotate(360deg);
     }
 }

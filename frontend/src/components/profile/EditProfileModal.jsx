@@ -3,10 +3,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Modal } from "../ui/Modal";
 import { ImageCropperModal } from "../ui/ImageCropperModal";
 import FormMessage from "../ui/FormMessage";
-import Spinner from "../Spinner";
 import { patch } from "../../services/api/api";
 import { useStorageUpload } from "../../hooks/useStorageUpload";
 import "./css/editProfileModal.css";
+import ButtonSpinner from "../ui/ButtonSpinner";
 
 export const EditProfileModal = ({ isOpen, onClose, user = {}, onSave }) => {
   const queryClient = useQueryClient();
@@ -235,7 +235,7 @@ export const EditProfileModal = ({ isOpen, onClose, user = {}, onSave }) => {
               disabled={updateProfileMutation.isPending}
             >
               {updateProfileMutation.isPending ? (
-                <Spinner label="Saving..." />
+                <ButtonSpinner label="Saving..." />
               ) : (
                 "Save Changes"
               )}

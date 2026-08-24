@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthMe } from "../hooks/AuthMe";
 import Spinner from "../components/Spinner";
 import FormMessage from "../components/ui/FormMessage";
@@ -19,6 +19,7 @@ function getInitials(name = "User") {
 }
 
 export function ProfilePage() {
+  const navigate = useNavigate();
   const { data, isLoading, isError, error, refetch } = AuthMe();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -146,6 +147,31 @@ export function ProfilePage() {
         <div className="profile-details-grid">
           <ProfileDetailCard label="Member Since" value={formattedDate} />
           <ProfileDetailCard label="Last Login" value={lastLoginFormatted} />
+          <ProfileDetailCard
+            label="Organizations"
+            value={user.totalOrganizations ?? 0}
+            onClick={() => navigate("/organizations")}
+            icon={
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+                <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+                <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+                <path d="M10 6h4" />
+                <path d="M10 10h4" />
+                <path d="M10 14h4" />
+                <path d="M10 18h4" />
+              </svg>
+            }
+          />
         </div>
 
         {/* Security & Authentication Section */}
@@ -162,6 +188,26 @@ export function ProfilePage() {
             description="Manage your sign-in methods and password options"
             buttonText="Manage"
             onClick={() => setIsAuthModalOpen(true)}
+          />
+        </div>
+
+        {/* Recycle Bin & Data Recovery Section */}
+        <div className="profile-security-section">
+          <h2 className="security-section-title">Recycle Bin & Data Recovery</h2>
+          <SecurityOptionCard
+            icon={
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 6h18" />
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                <line x1="10" y1="11" x2="10" y2="17" />
+                <line x1="14" y1="11" x2="14" y2="17" />
+              </svg>
+            }
+            title="Restore deleted resources"
+            description="View and recover soft-deleted organizations, projects, or items"
+            buttonText="View Trash"
+            onClick={() => navigate("/restore")}
           />
         </div>
       </div>

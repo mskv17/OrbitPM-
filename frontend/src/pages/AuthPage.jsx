@@ -7,7 +7,7 @@ import { validateLoginForm, validateSignUpForm } from "../utils/validators/fromV
 import { useMutation } from "@tanstack/react-query";
 import { post } from "../services/api/api";
 import { Link, useNavigate } from "react-router-dom";
-import Spinner from "../components/Spinner";
+import ButtonSpinner from "../components/ui/ButtonSpinner";
 
 export const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -80,7 +80,7 @@ export const AuthPage = () => {
           <FormMessage message={message} />
 
           <button disabled={!isSignUp && authMutation.isLoading}>
-            {!isSignUp && authMutation.isLoading ? <Spinner label="Logging in..." /> : "Login"}
+            {!isSignUp && authMutation.isLoading ? <ButtonSpinner label="Logging in..." /> : "Login"}
           </button>
         </Form>
       ) : (
@@ -103,7 +103,7 @@ export const AuthPage = () => {
           <FormMessage message={message} />
 
           <button disabled={isSignUp && authMutation.isLoading}>
-            {isSignUp && authMutation.isLoading ? <Spinner label="Creating account..." /> : "Sign Up"}
+            {isSignUp && authMutation.isLoading ? <ButtonSpinner label="Creating account..." /> : "Sign Up"}
           </button>
         </Form>
       )}

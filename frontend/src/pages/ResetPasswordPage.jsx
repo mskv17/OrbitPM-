@@ -5,6 +5,7 @@ import { Form } from "../components/ui/Form";
 import { FormMessage } from "../components/ui/FormMessage";
 import { AuthCard } from "../components/ui/AuthCard";
 import Spinner from "../components/Spinner";
+import ButtonSpinner from "../components/ui/ButtonSpinner";
 import { post } from "../services/api/api";
 import "./css/authPage.css";
 
@@ -141,7 +142,7 @@ export const ResetPasswordPage = () => {
 
           <button disabled={resetPasswordMutation.isPending}>
             {resetPasswordMutation.isPending ? (
-              <Spinner label="Updating password..." />
+              <ButtonSpinner label="Updating password..." />
             ) : (
               "Reset Password"
             )}

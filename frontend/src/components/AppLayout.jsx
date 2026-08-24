@@ -148,6 +148,13 @@ export default function AppLayout({ children }) {
           >
             Dashboard
           </NavLink>
+          <NavLink
+            className={({ isActive }) => `app-nav-link${isActive ? " is-active" : ""}`}
+            to="/organizations"
+            onClick={() => setIsMobileNavOpen(false)}
+          >
+            Organizations
+          </NavLink>
         </nav>
 
 

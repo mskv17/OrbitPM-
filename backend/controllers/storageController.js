@@ -39,6 +39,12 @@ registry.register("avathar", async ({ user, body }) => {
   return createSignedUploadPath(path);
 });
 
+registry.register("logo", async ({ user, body }) => {
+  const extension = getFileExtension(body);
+  const path = `logos/org-of-${user._id}/logo.${extension}`;
+  return createSignedUploadPath(path);
+});
+
 export async function createPath(req, res) {
   const { toStore } = req.body;
   if (!toStore) {

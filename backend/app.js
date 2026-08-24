@@ -8,6 +8,7 @@ import cors from "cors";
 import { configDotenv } from "dotenv";
 import { authMidleWare } from "./middleware/authmiddleware.js";
 import storageRoutes from "./routes/storageRoutes.js";
+import organizationRoutes from "./routes/organizationRoutes.js";
 
 configDotenv();
 const app = express();
@@ -21,29 +22,30 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 }));
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.get("/api/status",(req,res) => {
+app.get("/api/status", (req, res) => {
     res.json({
-        status:"ok"
+        status: "ok"
     })
 });
 
-app.use("/api/auth",authRoutes);
-app.use("/api/storage",authMidleWare,storageRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/storage", authMidleWare, storageRoutes);
+app.use("/api/organizations", organizationRoutes);
 
-app.get("{*splat}",(req,res) => {
+app.get("{*splat}", (req, res) => {
     res.status(404).send("404 Page not found");
 });
 
-app.use((err,req,res,next) => {
-    if(!err.statusCode) {
+app.use((err, req, res, next) => {
+    if (!err.statusCode) {
         console.error(err);
     }
-    res.status(err.statusCode||500).json({
-        success:false,
-        message:err.statusCode?err.message:"Internal Server Error"
+    res.status(err.statusCode || 500).json({
+        success: false,
+        message: err.statusCode ? err.message : "Internal Server Error"
     });
 });
 
