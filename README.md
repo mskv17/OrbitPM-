@@ -80,6 +80,7 @@ npm install
 - Complete Auth
 - Landing Page
 - complete profile page and managment
+- complete organization CRUD operation and restore 
 
 ## License
 
