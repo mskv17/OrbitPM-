@@ -14,6 +14,8 @@ import { ProfilePage } from './pages/ProfilePage'
 import { OrganizationsPage } from './pages/OrganizationsPage'
 import { OrganizationDetailPage } from './pages/OrganizationDetailPage'
 import { RestoreResourcesPage } from './pages/RestoreResourcesPage'
+import { AcceptInvitationPage } from './pages/AcceptInvitationPage'
+import { ProjectBoardPage } from './pages/ProjectBoardPage'
 
 function ProtectedRoute({ children }) {
   const { data, isLoading, isError, error } = AuthMe();
@@ -47,6 +49,7 @@ function App() {
         <Route path='/dashboard' element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
         <Route path='/organizations' element={<ProtectedRoute><OrganizationsPage /></ProtectedRoute>} />
         <Route path='/organization/:slug' element={<ProtectedRoute><OrganizationDetailPage /></ProtectedRoute>} />
+        <Route path='/project/:projectId' element={<ProtectedRoute><ProjectBoardPage /></ProtectedRoute>} />
         <Route path='/restore' element={<ProtectedRoute><RestoreResourcesPage /></ProtectedRoute>} />
         <Route path='/profile' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path='/' element={<Home />} />
@@ -54,6 +57,7 @@ function App() {
         <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         <Route path='/reset-password' element={<ResetPasswordPage />} />
         <Route path='/verify-email' element={<VerifyEmail />} />
+        <Route path='/accept-invitation' element={<AcceptInvitationPage />} />
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
     </AppLayout>

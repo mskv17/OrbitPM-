@@ -4,6 +4,9 @@ import { PopupConform } from "./popup";
 import "./style/layout.css";
 import { post } from "../services/api/api";
 import { useMutation } from "@tanstack/react-query";
+import { Search } from "lucide-react";
+import NotificationBell from "./NotificationBell";
+import SearchModal from "./SearchModal";
 
 function getStoredUser() {
   try {
@@ -32,7 +35,19 @@ export default function AppLayout({ children }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    function handleGlobalKeyDown(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+    }
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, []);
 
   useEffect(() => {
     setUser(getStoredUser());
@@ -159,12 +174,32 @@ export default function AppLayout({ children }) {
 
 
         {user ? (
-          <div className="app-user-container" ref={containerRef}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <button
+              type="button"
+              onClick={() => setIsSearchOpen(true)}
+              title="Search OrbitPM (Ctrl+K)"
+              style={{
+                background: "transparent",
+                border: "none",
+                padding: "8px",
+                borderRadius: "8px",
+                cursor: "pointer",
+                color: "#475569",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              aria-label="Search"
+            >
+              <Search size={18} />
+            </button>
+            <NotificationBell />
+            <div className="app-user-container" ref={containerRef}>
             <button
               type="button"
               className={`app-user-card ${isMenuOpen ? "is-active" : ""}`}
               onClick={() => setIsMenuOpen((prev) => !prev)}
-              onFocus={() => setIsMenuOpen(true)}
               aria-expanded={isMenuOpen}
               aria-haspopup="true"
               aria-label="User account menu"
@@ -249,6 +284,7 @@ export default function AppLayout({ children }) {
               </div>
             )}
           </div>
+        </div>
         ) : (
           <NavLink className="app-header-action" to={isAuthPage ? "/" : "/auth"}>
             {isAuthPage ? "Back home" : "Sign in"}
@@ -263,6 +299,11 @@ export default function AppLayout({ children }) {
           onDenied={() => setShowLogoutConfirm(false)}
         />
       )}
+
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
 
       <div className="app-content">{children}</div>
     </div>
