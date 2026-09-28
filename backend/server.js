@@ -1,10 +1,11 @@
+import http from "http";
 import { configDotenv } from "dotenv";
 import app from "./app.js";
 import connectDB from "./config/connectDb.js";
 import { connectRedis } from "./config/reddis.js";
-import {protector} from "protector-shield";
+import { protector } from "protector-shield";
 import { initSupabase } from "./config/supabase.js";
-
+import { initSocket } from "./config/socket.js";
 
 configDotenv();
 const PORT = process.env.PORT;
@@ -14,7 +15,11 @@ async function startServer() {
     await connectRedis();
     initSupabase();
     console.log("Frontend URL:", process.env.FRONTEND_URL);
-    app.listen(PORT,()=>{
+
+    const httpServer = http.createServer(app);
+    initSocket(httpServer);
+
+    httpServer.listen(PORT, () => {
         console.log(`server running on PORT: ${PORT} `)
         if(process.env.NODE_ENV!=="production") {
             console.log(`
