@@ -30,9 +30,13 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
-    totalOrganizations:{
-      type:Number,
-      default:0,
+    totalOrganizations: {
+      type: Number,
+      default: 0,
+    },
+    totalMemberShips: {
+      type: Number,
+      default: 0,
     },
     isVerified: {
       type: Boolean,
@@ -59,7 +63,7 @@ const userSchema = new mongoose.Schema(
       default: "",
       select: false,
     },
-    resetTokenExpires:Date,
+    resetTokenExpires: Date,
     verificationToken: {
       type: String,
       default: "",

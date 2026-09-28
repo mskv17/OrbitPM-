@@ -1,0 +1,142 @@
+/* Invite Member Modal Styling */
+
+.invite-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0;
+}
+
+.invite-search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.invite-field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.invite-search-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.invite-email-input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.invite-email-input:focus {
+  background: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.invite-search-btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* Searched User Result Tile */
+.invite-user-result-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.invite-user-avatar-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f1f5f9;
+}
+
+.invite-user-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.invite-user-avatar-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.invite-user-info {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.invite-user-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.invite-user-email {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.invite-user-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.invite-role-select {
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
+}
+
+.invite-role-select:focus {
+  border-color: #2563eb;
+}
+
+.invite-send-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+}

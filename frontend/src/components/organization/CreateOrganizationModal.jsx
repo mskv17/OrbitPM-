@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Modal from "../ui/Modal";
 import { ImageCropperModal } from "../ui/ImageCropperModal";
@@ -29,24 +29,21 @@ export const CreateOrganizationModal = ({
   const [tempRawImageSrc, setTempRawImageSrc] = useState(null);
   const [isCropperOpen, setIsCropperOpen] = useState(false);
 
-  useEffect(() => {
+  const [prevResetKey, setPrevResetKey] = useState(null);
+  const currentResetKey = isOpen ? `${organization?._id || "new"}` : "closed";
+
+  if (currentResetKey !== prevResetKey) {
+    setPrevResetKey(currentResetKey);
     if (isOpen) {
-      if (organization) {
-        setName(organization.name || "");
-        setDescription(organization.description || "");
-        setLogoPreview(organization.logo || "");
-        setLogoFile(null);
-      } else {
-        setName("");
-        setDescription("");
-        setLogoFile(null);
-        setLogoPreview("");
-      }
+      setName(organization?.name || "");
+      setDescription(organization?.description || "");
+      setLogoPreview(organization?.logo || "");
+      setLogoFile(null);
       setTempRawImageSrc(null);
       setIsCropperOpen(false);
       setFeedback({ type: "", text: "" });
     }
-  }, [isOpen, organization]);
+  }
 
   const orgMutation = useMutation({
     mutationFn: async () => {

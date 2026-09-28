@@ -25,7 +25,7 @@ export async function authMidleWare(req,res,next) {
         }
         req.user = user;
         next();
-    } catch (err) {
+    } catch {
         throw new AppError("invalid token",401);
     }
 }

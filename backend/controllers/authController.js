@@ -239,7 +239,9 @@ export async function resetpassword(req, res) {
   const accessToken = genAccessToken(user);
   user.password = hashedPassword;
   user.refreshToken = refreshToken;
-  ((user.resetToken = ""), await user.save());
+  user.resetToken = "";
+  user.resetTokenExpires = null;
+  await user.save();
 
   setAuthCookies(res, accessToken, refreshToken);
   sendResponse(res, 200, "Password updated successfuly", {
@@ -306,6 +308,11 @@ export async function updateProfile(req, res) {
 
   if (requestedUpdates.length === 0) {
     throw new AppError("No updates provided", 400);
+  }
+
+  const hasInvalidField = requestedUpdates.some((field) => !allowedUpdates.includes(field));
+  if (hasInvalidField) {
+    throw new AppError("Invalid fields in update request", 400);
   }
 
   const userUpdates = {};

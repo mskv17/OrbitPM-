@@ -3,13 +3,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
-  Building2,
   Calendar,
   CheckCircle2,
   FolderGit2,
   Pencil,
   Trash2,
-  UserPlus,
   Users,
 } from "lucide-react";
 import { del, get } from "../services/api/api";
@@ -17,6 +15,9 @@ import Spinner from "../components/Spinner";
 import FormMessage from "../components/ui/FormMessage";
 import { PopupConform } from "../components/popup";
 import CreateOrganizationModal from "../components/organization/CreateOrganizationModal";
+import InviteMemberModal from "../components/organization/InviteMemberModal";
+import OrganizationMembers from "../components/organization/OrganizationMembers";
+import OrganizationProjects from "../components/organization/OrganizationProjects";
 import "./css/organizationDetailPage.css";
 
 export function OrganizationDetailPage() {
@@ -27,6 +28,7 @@ export function OrganizationDetailPage() {
   const [activeTab, setActiveTab] = useState("members");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [feedback, setFeedback] = useState({ type: "", text: "" });
 
   const { data, isLoading, isError, error } = useQuery({
@@ -37,6 +39,31 @@ export function OrganizationDetailPage() {
   });
 
   const org = data?.data;
+
+  // Current user id comes from localStorage — ProtectedRoute writes it on every auth check.
+  // No extra network call needed; the role is derived from the members list below.
+  const currentUserId = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user"))?._id || null;
+    } catch {
+      return null;
+    }
+  })();
+
+  // Fetch members list (React Query deduplicates — OrganizationMembers child uses the same key)
+  const { data: membersData } = useQuery({
+    queryKey: ["organization-members", org?._id],
+    queryFn: () => get(`/organizations/members/${org._id}`),
+    enabled: Boolean(org?._id),
+    staleTime: 1000 * 60 * 2,
+  });
+
+  const members = membersData?.data || [];
+  const actorMember = members.find(
+    (m) => String(typeof m.user === "object" ? m.user._id : m.user) === String(currentUserId)
+  );
+  const actorRole = actorMember?.role || null;
+  const actorUserId = currentUserId;
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
@@ -132,15 +159,6 @@ export function OrganizationDetailPage() {
 
           {/* Action Bar */}
           <div className="org-detail-actions">
-            <button
-              type="button"
-              className="org-btn org-btn--primary"
-              onClick={() => { }}
-              title="Add Teammate (Coming Soon)"
-            >
-              <UserPlus size={15} />
-              <span>Add Member</span>
-            </button>
 
             <button
               type="button"
@@ -262,15 +280,24 @@ export function OrganizationDetailPage() {
         </div>
 
         {activeTab === "members" && (
-          <div className="org-tab-content-empty">
-            <p>Team members management will be available here.</p>
-          </div>
+          <OrganizationMembers
+            organizationId={org._id}
+            actorRole={actorRole}
+            actorUserId={actorUserId}
+            onAddMemberClick={
+              actorRole === "owner" || actorRole === "admin"
+                ? () => setIsInviteModalOpen(true)
+                : undefined
+            }
+          />
         )}
 
         {activeTab === "projects" && (
-          <div className="org-tab-content-empty">
-            <p>Organization projects will be listed here.</p>
-          </div>
+          <OrganizationProjects
+            organizationId={org._id}
+            actorRole={actorRole}
+            orgSlug={org.slug}
+          />
         )}
       </div>
 
@@ -288,6 +315,13 @@ export function OrganizationDetailPage() {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         organization={org}
+      />
+
+      {/* Invite Member Modal Popup */}
+      <InviteMemberModal
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
+        organizationId={org._id}
       />
     </div>
   );
